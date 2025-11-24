@@ -13,10 +13,10 @@ export function Button({
     const baseStyles = 'font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
 
     const variants = {
-        primary: 'bg-primary text-white hover:opacity-90',
-        secondary: 'bg-accent text-text hover:opacity-90',
-        outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-        ghost: 'text-primary hover:bg-primary/10'
+        primary: 'bg-primary dark:bg-primary-dark text-white hover:opacity-90',
+        secondary: 'bg-accent dark:bg-accent-dark text-text dark:text-text-dark hover:opacity-90',
+        outline: 'border-2 border-primary dark:border-primary-dark text-primary dark:text-primary-dark hover:bg-primary dark:hover:bg-primary-dark hover:text-white',
+        ghost: 'text-primary dark:text-primary-dark hover:bg-primary/10 dark:hover:bg-primary-dark/10'
     }
 
     const sizes = {

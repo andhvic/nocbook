@@ -10,10 +10,10 @@ export function Navbar() {
     const { user, signOut } = useAuth()
 
     return (
-        <nav className="border-b border-border bg-cardBg sticky top-0 z-50">
+        <nav className="border-b border-border dark:border-border-dark bg-cardBg dark:bg-cardBg-dark sticky top-0 z-50 transition-colors">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    <Link href="/" className="text-2xl font-bold text-primary">
+                    <Link href="/" className="text-2xl font-bold text-primary dark:text-primary-dark">
                         NocBook
                     </Link>
 
@@ -22,9 +22,9 @@ export function Navbar() {
 
                         {user ? (
                             <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-2 text-sm text-textSecondary">
+                                <div className="flex items-center gap-2 text-sm text-text-secondary dark:text-text-darkSecondary">
                                     <User className="w-4 h-4" />
-                                    {user.email}
+                                    <span className="hidden sm:inline">{user.email}</span>
                                 </div>
                                 <Button
                                     variant="outline"
@@ -33,7 +33,7 @@ export function Navbar() {
                                     className="flex items-center gap-2"
                                 >
                                     <LogOut className="w-4 h-4" />
-                                    Logout
+                                    <span className="hidden sm:inline">Logout</span>
                                 </Button>
                             </div>
                         ) : (

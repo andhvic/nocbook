@@ -28,16 +28,16 @@ export default function Home() {
     ]
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-background dark:bg-background-dark transition-colors">
             <Navbar />
 
             {/* Hero Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div className="text-center">
-                    <h1 className="text-5xl font-bold text-text mb-6">
-                        Welcome to <span className="text-primary">NocBook</span>
+                    <h1 className="text-5xl font-bold text-text dark:text-text-dark mb-6">
+                        Welcome to <span className="text-primary dark:text-primary-dark">NocBook</span>
                     </h1>
-                    <p className="text-xl text-textSecondary mb-8 max-w-2xl mx-auto">
+                    <p className="text-xl text-text-secondary dark:text-text-darkSecondary mb-8 max-w-2xl mx-auto">
                         Your personal hub for managing networks, projects, skills, and daily activities.
                         Everything you need to track your professional growth in one place.
                     </p>
@@ -58,7 +58,7 @@ export default function Home() {
 
             {/* Features Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                <h2 className="text-3xl font-bold text-center text-text mb-12">
+                <h2 className="text-3xl font-bold text-center text-text dark:text-text-dark mb-12">
                     Powerful Features
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -67,13 +67,15 @@ export default function Home() {
                         return (
                             <div
                                 key={feature.title}
-                                className="p-6 rounded-xl border-2 border-border bg-cardBg hover:border-primary transition-colors"
+                                className="p-6 rounded-xl border-2 border-border dark:border-border-dark
+                  bg-cardBg dark:bg-cardBg-dark hover:border-primary dark:hover:border-primary-dark
+                  transition-colors"
                             >
-                                <Icon className="w-12 h-12 text-primary mb-4" />
-                                <h3 className="text-xl font-semibold text-text mb-2">
+                                <Icon className="w-12 h-12 text-primary dark:text-primary-dark mb-4" />
+                                <h3 className="text-xl font-semibold text-text dark:text-text-dark mb-2">
                                     {feature.title}
                                 </h3>
-                                <p className="text-textSecondary">
+                                <p className="text-text-secondary dark:text-text-darkSecondary">
                                     {feature.description}
                                 </p>
                             </div>
