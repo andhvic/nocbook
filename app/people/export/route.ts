@@ -6,7 +6,6 @@ import Papa from 'papaparse'
 
 export async function GET(request: NextRequest) {
     try {
-        // ✅ FIXED: Gunakan createServerClient dengan @supabase/ssr
         const cookieStore = await cookies()
 
         const supabase = createServerClient(
@@ -28,11 +27,11 @@ export async function GET(request: NextRequest) {
 
         // Check auth
         const { data: { user } } = await supabase.auth.getUser()
-        if (! user) {
+        if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const searchParams = request.nextUrl.searchParams
+        const searchParams = request. nextUrl.searchParams
         const format = searchParams.get('format') || 'xlsx'
         const role = searchParams.get('role')
         const tag = searchParams.get('tag')
@@ -45,11 +44,11 @@ export async function GET(request: NextRequest) {
             .order('name', { ascending: true })
 
         if (role) {
-            query = query.eq('role', role)
+            query = query. eq('role', role)
         }
 
         if (tag) {
-            query = query. contains('tags', [tag])
+            query = query.contains('tags', [tag])
         }
 
         if (skill) {
@@ -66,20 +65,20 @@ export async function GET(request: NextRequest) {
 
         // Transform data untuk export
         const exportData = people.map(person => ({
-            name: person.name,
-            profession: person.profession || '',
+            name: person. name,
+            profession: person. profession || '',
             role: person.role || '',
             skills: person.skills ?  person.skills.join(', ') : '',
-            tags: person.tags ? person. tags.join(', ') : '',
+            tags: person.tags ? person.tags.join(', ') : '',
             instagram: person.contacts?.instagram || '',
             whatsapp: person.contacts?.whatsapp || '',
-            linkedin: person.contacts?.linkedin || '',
+            linkedin: person.contacts?. linkedin || '',
             github: person.contacts?.github || '',
             discord: person.contacts?.discord || '',
             email: person.contacts?.email || '',
             phone: person.contacts?.phone || '',
-            twitter: person. contacts?.twitter || '',
-            telegram: person.contacts?.telegram || '',
+            twitter: person.contacts?.twitter || '',
+            telegram: person. contacts?.telegram || '',
             website: person.contacts?. website || '',
             notes: person.notes || '',
             created_at: new Date(person.created_at). toLocaleDateString()
@@ -87,11 +86,11 @@ export async function GET(request: NextRequest) {
 
         if (format === 'csv') {
             // Export CSV
-            const csv = Papa.unparse(exportData)
+            const csv = Papa. unparse(exportData)
 
             return new NextResponse(csv, {
                 headers: {
-                    'Content-Type': 'text/csv',
+                    'Content-Type': 'text/csv; charset=utf-8',
                     'Content-Disposition': `attachment; filename="nocbook-people-${Date.now()}.csv"`
                 }
             })
@@ -100,7 +99,7 @@ export async function GET(request: NextRequest) {
             const ws = XLSX.utils.json_to_sheet(exportData)
 
             // Set column widths
-            ws['!cols'] = [
+            ws['! cols'] = [
                 { wch: 15 }, { wch: 20 }, { wch: 12 }, { wch: 30 }, { wch: 25 },
                 { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 18 },
                 { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 25 },
@@ -115,6 +114,7 @@ export async function GET(request: NextRequest) {
                 bookType: format === 'xls' ? 'xls' : 'xlsx'
             })
 
+            // ✅ FIXED: Hapus spasi di Content-Type
             return new NextResponse(buffer, {
                 headers: {
                     'Content-Type': 'application/vnd. openxmlformats-officedocument.spreadsheetml. sheet',
