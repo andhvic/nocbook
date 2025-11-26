@@ -6,7 +6,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase'
 import { PeopleCard } from '@/components/people/PeopleCard'
 import { Button } from '@/components/ui/Button'
-import { Plus, Users as UsersIcon, Search, Filter, X } from 'lucide-react'
+import { ImportExportModal } from '@/components/people/ImportExportModal'
+import { Plus, Users as UsersIcon, Search, Filter, X, FileDown } from 'lucide-react'
 import Link from 'next/link'
 import type { Person } from '@/types'
 
@@ -20,6 +21,7 @@ export default function PeoplePage() {
     const [selectedRole, setSelectedRole] = useState('')
     const [selectedTag, setSelectedTag] = useState('')
     const [showMobileFilters, setShowMobileFilters] = useState(false)
+    const [showImportExport, setShowImportExport] = useState(false)
 
     const supabase = createClient()
 
@@ -122,12 +124,23 @@ export default function PeoplePage() {
                             {people.length} {people.length === 1 ? 'person' : 'people'} in your network
                         </p>
                     </div>
-                    <Link href="/people/new" className="flex-shrink-0">
-                        <Button variant="primary" size="sm" className="flex items-center gap-2">
-                            <Plus className="w-4 h-4" />
-                            <span className="hidden sm:inline">Add Person</span>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowImportExport(true)}
+                            className="flex items-center gap-2"
+                        >
+                            <FileDown className="w-4 h-4" />
+                            <span className="hidden sm:inline">Import/Export</span>
                         </Button>
-                    </Link>
+                        <Link href="/people/new" className="flex-shrink-0">
+                            <Button variant="primary" size="sm" className="flex items-center gap-2">
+                                <Plus className="w-4 h-4" />
+                                <span className="hidden sm:inline">Add Person</span>
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Mobile: Compact Search + Filter Button */}
@@ -357,12 +370,22 @@ export default function PeoplePage() {
                             <p className="text-text-secondary dark:text-text-darkSecondary mb-6 text-sm px-4">
                                 Start building your network by adding your first person
                             </p>
-                            <Link href="/people/new">
-                                <Button variant="primary" className="inline-flex items-center gap-2">
-                                    <Plus className="w-5 h-5" />
-                                    Add Your First Person
+                            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                                <Link href="/people/new">
+                                    <Button variant="primary" className="inline-flex items-center gap-2">
+                                        <Plus className="w-5 h-5" />
+                                        Add Your First Person
+                                    </Button>
+                                </Link>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setShowImportExport(true)}
+                                    className="inline-flex items-center gap-2"
+                                >
+                                    <FileDown className="w-5 h-5" />
+                                    Or Import from File
                                 </Button>
-                            </Link>
+                            </div>
                         </div>
                     ) : (
                         <div className="text-center py-12 bg-cardBg dark:bg-cardBg-dark border-2 border-dashed
@@ -374,13 +397,31 @@ export default function PeoplePage() {
                             <h3 className="text-lg font-semibold text-text dark:text-text-dark mb-2">
                                 No results found
                             </h3>
-                            <p className="text-text-secondary dark:text-text-darkSecondary text-sm px-4">
+                            <p className="text-text-secondary dark:text-text-darkSecondary text-sm px-4 mb-4">
                                 Try adjusting your filters or search term
                             </p>
+                            {hasActiveFilters && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={clearFilters}
+                                    className="inline-flex items-center gap-2"
+                                >
+                                    <X className="w-4 h-4" />
+                                    Clear Filters
+                                </Button>
+                            )}
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* Import/Export Modal */}
+            <ImportExportModal
+                isOpen={showImportExport}
+                onClose={() => setShowImportExport(false)}
+                onImportSuccess={fetchPeople}
+            />
         </div>
     )
 }
