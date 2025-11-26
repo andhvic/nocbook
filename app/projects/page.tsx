@@ -75,11 +75,11 @@ export default function ProjectsPage() {
         try {
             const { data, error } = await supabase
                 .from('people')
-                . select('id, name')
+                .select('id, name')
                 .order('name', { ascending: true })
 
             if (error) throw error
-            setPeople(data || [])
+            setPeople((data as Person[])|| [])
         } catch (error) {
             console.error('Error fetching people:', error)
         }
