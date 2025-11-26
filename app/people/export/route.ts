@@ -1,16 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
 
 export async function GET(request: NextRequest) {
     try {
-        const supabase = createRouteHandlerClient({ cookies })
+        // ✅ FIXED: Gunakan createServerClient dengan @supabase/ssr
+        const cookieStore = await cookies()
+
+        const supabase = createServerClient(
+            process. env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll() {
+                        return cookieStore.getAll()
+                    },
+                    setAll(cookiesToSet) {
+                        cookiesToSet. forEach(({ name, value, options }) =>
+                            cookieStore.set(name, value, options)
+                        )
+                    },
+                },
+            }
+        )
 
         // Check auth
         const { data: { user } } = await supabase.auth.getUser()
-        if (!user) {
+        if (! user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
@@ -31,7 +49,7 @@ export async function GET(request: NextRequest) {
         }
 
         if (tag) {
-            query = query.contains('tags', [tag])
+            query = query. contains('tags', [tag])
         }
 
         if (skill) {
@@ -42,8 +60,8 @@ export async function GET(request: NextRequest) {
 
         if (error) throw error
 
-        if (!people || people.length === 0) {
-            return NextResponse.json({ error: 'No data to export' }, { status: 404 })
+        if (! people || people.length === 0) {
+            return NextResponse. json({ error: 'No data to export' }, { status: 404 })
         }
 
         // Transform data untuk export
@@ -51,8 +69,8 @@ export async function GET(request: NextRequest) {
             name: person.name,
             profession: person.profession || '',
             role: person.role || '',
-            skills: person.skills ? person.skills.join(', ') : '',
-            tags: person.tags ? person.tags.join(', ') : '',
+            skills: person.skills ?  person.skills.join(', ') : '',
+            tags: person.tags ? person. tags.join(', ') : '',
             instagram: person.contacts?.instagram || '',
             whatsapp: person.contacts?.whatsapp || '',
             linkedin: person.contacts?.linkedin || '',
@@ -60,11 +78,11 @@ export async function GET(request: NextRequest) {
             discord: person.contacts?.discord || '',
             email: person.contacts?.email || '',
             phone: person.contacts?.phone || '',
-            twitter: person.contacts?.twitter || '',
+            twitter: person. contacts?.twitter || '',
             telegram: person.contacts?.telegram || '',
-            website: person.contacts?.website || '',
+            website: person.contacts?. website || '',
             notes: person.notes || '',
-            created_at: new Date(person.created_at).toLocaleDateString()
+            created_at: new Date(person.created_at). toLocaleDateString()
         }))
 
         if (format === 'csv') {
@@ -99,8 +117,8 @@ export async function GET(request: NextRequest) {
 
             return new NextResponse(buffer, {
                 headers: {
-                    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'Content-Disposition': `attachment; filename="nocbook-people-${Date.now()}.${format}"`
+                    'Content-Type': 'application/vnd. openxmlformats-officedocument.spreadsheetml. sheet',
+                    'Content-Disposition': `attachment; filename="nocbook-people-${Date. now()}.${format}"`
                 }
             })
         }

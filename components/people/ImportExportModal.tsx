@@ -192,7 +192,7 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
             formData.append('file', file)
             formData.append('skipDuplicates', skipDuplicates.toString())
 
-            const response = await fetch('/api/people/import', {
+            const response = await fetch('/people/import', {
                 method: 'POST',
                 body: formData
             })
@@ -229,7 +229,7 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                 ...(exportFilters.skill && { skill: exportFilters.skill })
             })
 
-            const response = await fetch(`/api/people/export?${params}`)
+            const response = await fetch(`/people/export?${params}`)
 
             if (!response.ok) {
                 const error = await response.json()

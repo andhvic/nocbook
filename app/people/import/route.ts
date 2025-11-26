@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
@@ -47,7 +47,25 @@ function parseCommaSeparated(value: string | undefined): string[] | null {
 
 export async function POST(request: NextRequest) {
     try {
-        const supabase = createRouteHandlerClient({ cookies })
+        // ✅ FIXED: Gunakan createServerClient dengan @supabase/ssr
+        const cookieStore = await cookies()
+
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll() {
+                        return cookieStore.getAll()
+                    },
+                    setAll(cookiesToSet) {
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            cookieStore.set(name, value, options)
+                        )
+                    },
+                },
+            }
+        )
 
         // Check auth
         const { data: { user } } = await supabase.auth.getUser()
@@ -57,7 +75,7 @@ export async function POST(request: NextRequest) {
 
         const formData = await request.formData()
         const file = formData.get('file') as File
-        const skipDuplicates = formData.get('skipDuplicates') === 'true'
+        const skipDuplicates = formData. get('skipDuplicates') === 'true'
 
         if (!file) {
             return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -69,15 +87,15 @@ export async function POST(request: NextRequest) {
         let rows: ImportRow[] = []
 
         // Parse based on file type
-        if (file.name.endsWith('.csv')) {
+        if (file.name. endsWith('.csv')) {
             const text = buffer.toString('utf-8')
             const parsed = Papa.parse(text, {
                 header: true,
                 skipEmptyLines: true,
-                transformHeader: (header) => header.trim().toLowerCase()
+                transformHeader: (header) => header. trim(). toLowerCase()
             })
             rows = parsed.data as ImportRow[]
-        } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+        } else if (file. name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
             const workbook = XLSX.read(buffer, { type: 'buffer' })
             const sheetName = workbook.SheetNames[0]
             const sheet = workbook.Sheets[sheetName]
@@ -101,7 +119,7 @@ export async function POST(request: NextRequest) {
 
         // Fetch existing people untuk duplicate check
         const { data: existingPeople } = await supabase
-            .from('people')
+            . from('people')
             .select('name, contacts')
 
         const result: ImportResult = {
@@ -123,21 +141,21 @@ export async function POST(request: NextRequest) {
                 continue
             }
 
-            const name = String(row.name).trim()
+            const name = String(row.name). trim()
 
             // Validate email if provided
-            if (row.email && String(row.email).trim() !== '' && !isValidEmail(String(row.email).trim())) {
+            if (row. email && String(row.email).trim() !== '' && !isValidEmail(String(row.email).trim())) {
                 result.failed++
                 result.errors.push(`Row ${rowNumber} (${name}): Invalid email format`)
                 continue
             }
 
             // Check duplicates
-            const isDuplicate = existingPeople?.some(person => {
-                if (person.name.toLowerCase() === name.toLowerCase()) return true
+            const isDuplicate = existingPeople?. some(person => {
+                if (person.name. toLowerCase() === name.toLowerCase()) return true
 
                 const contacts = person.contacts as any
-                if (contacts && row.phone && contacts.phone === String(row.phone).trim()) return true
+                if (contacts && row.phone && contacts.phone === String(row.phone). trim()) return true
                 if (contacts && row.email && contacts.email === String(row.email).trim()) return true
                 if (contacts && row.whatsapp && contacts.whatsapp === String(row.whatsapp).trim()) return true
 
@@ -164,21 +182,21 @@ export async function POST(request: NextRequest) {
                 'email', 'phone', 'twitter', 'telegram', 'website'
             ]
 
-            contactFields.forEach(field => {
+            contactFields. forEach(field => {
                 const value = row[field as keyof ImportRow]
                 if (value && String(value).trim() !== '') {
-                    contacts[field] = String(value).trim()
+                    contacts[field] = String(value). trim()
                 }
             })
 
             // Insert to database
             const { error } = await supabase
                 .from('people')
-                .insert({
+                . insert({
                     user_id: user.id,
                     name,
                     profession: row.profession && String(row.profession).trim() !== '' ? String(row.profession).trim() : null,
-                    role: row.role && String(row.role).trim() !== '' ? String(row.role).trim() : null,
+                    role: row. role && String(row.role). trim() !== '' ? String(row.role).trim() : null,
                     skills,
                     tags,
                     contacts: Object.keys(contacts).length > 0 ? contacts : null,
@@ -189,13 +207,13 @@ export async function POST(request: NextRequest) {
                 result.failed++
                 result.errors.push(`Row ${rowNumber} (${name}): ${error.message}`)
             } else {
-                result.success++
+                result. success++
             }
         }
 
         return NextResponse.json(result)
     } catch (error: any) {
-        console.error('Import error:', error)
+        console. error('Import error:', error)
         return NextResponse.json({ error: error.message || 'Import failed' }, { status: 500 })
     }
 }
