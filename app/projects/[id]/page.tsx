@@ -114,6 +114,15 @@ export default function ProjectDetailPage() {
         }
     }, [user, projectId])
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location. search)
+            if (urlParams.get('edit') === 'true') {
+                setEditMode(true)
+            }
+        }
+    }, [])
+
     const fetchProject = async () => {
         try {
             setLoading(true)

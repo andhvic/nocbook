@@ -123,6 +123,15 @@ export default function SkillDetailPage() {
         }
     }, [user, skillId])
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search)
+            if (urlParams. get('edit') === 'true') {
+                setEditMode(true)
+            }
+        }
+    }, [])
+
     const fetchSkill = async () => {
         try {
             setLoading(true)

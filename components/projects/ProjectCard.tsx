@@ -126,20 +126,20 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                                 onClick={() => setShowMenu(false)}
                             />
                             <div className="absolute right-0 top-full mt-2 w-48 bg-cardBg dark:bg-cardBg-dark
-                border-2 border-border dark:border-border-dark rounded-xl shadow-lg z-20 overflow-hidden">
+      border-2 border-border dark:border-border-dark rounded-xl shadow-lg z-20 overflow-hidden">
                                 <Link
                                     href={`/projects/${project.id}`}
                                     className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
-                    text-text dark:text-text-dark transition-colors"
+          text-text dark:text-text-dark transition-colors"
                                     onClick={() => setShowMenu(false)}
                                 >
                                     <Eye className="w-4 h-4" />
                                     <span className="text-sm">View Details</span>
                                 </Link>
                                 <Link
-                                    href={`/projects/${project.id}`}
+                                    href={`/projects/${project. id}?edit=true`}
                                     className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
-                    text-text dark:text-text-dark transition-colors"
+          text-text dark:text-text-dark transition-colors"
                                     onClick={() => setShowMenu(false)}
                                 >
                                     <Edit className="w-4 h-4" />
@@ -147,11 +147,11 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                                 </Link>
                                 {project.github_url && (
                                     <a
-                                        href={project. github_url}
+                                        href={project.github_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
-                      text-text dark:text-text-dark transition-colors"
+            text-text dark:text-text-dark transition-colors"
                                         onClick={() => setShowMenu(false)}
                                     >
                                         <Github className="w-4 h-4" />
@@ -164,7 +164,7 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
-                      text-text dark:text-text-dark transition-colors"
+            text-text dark:text-text-dark transition-colors"
                                         onClick={() => setShowMenu(false)}
                                     >
                                         <ExternalLink className="w-4 h-4" />
@@ -178,7 +178,7 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                                         setShowDeleteConfirm(true)
                                     }}
                                     className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-950
-                    text-red-600 dark:text-red-400 transition-colors w-full"
+          text-red-600 dark:text-red-400 transition-colors w-full"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                     <span className="text-sm">Delete Project</span>

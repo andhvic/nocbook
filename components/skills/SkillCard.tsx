@@ -190,7 +190,7 @@ export function SkillCard({ skill, onDelete }: SkillCardProps) {
                                     <span className="text-sm">View Details</span>
                                 </Link>
                                 <Link
-                                    href={`/skills/${skill.id}`}
+                                    href={`/skills/${skill.id}?edit=true`}
                                     className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
                     text-text dark:text-text-dark transition-colors"
                                     onClick={() => setShowMenu(false)}
