@@ -143,3 +143,42 @@ export interface Skill {
     created_at: string
     updated_at: string
 }
+
+// Event Feature
+export type EventType = 'seminar' | 'workshop' | 'competition' | 'meetup' | 'conference'
+
+export type MaterialType = 'pdf' | 'slides' | 'video' | 'notes' | 'link'
+
+export interface EventMaterial {
+    id: string
+    event_id: string
+    title: string
+    url?: string
+    type: MaterialType
+    created_at: string
+}
+
+export interface Event {
+    id: string
+    user_id: string
+    name: string
+    event_type: EventType
+    venue?: string
+    certificate_url?: string
+    cost: number
+    organizer?: string
+    important_insights?: string[]
+    start_date?: string
+    end_date?: string
+    start_time?: string  // NEW
+    end_time?: string    // NEW
+    is_online: boolean   // NEW
+    meeting_url?: string // NEW
+    registration_url?: string // NEW
+    event_info_url?: string   // NEW
+    tags?: string[]
+    notes?: string
+    is_featured: boolean
+    created_at: string
+    updated_at: string
+}
