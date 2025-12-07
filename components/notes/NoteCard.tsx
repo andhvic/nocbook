@@ -51,7 +51,7 @@ const noteTypeConfig: Record<NoteType, { color: string; bgColor: string; label: 
         color: 'text-orange-600 dark:text-orange-400',
         bgColor: 'bg-orange-500/10',
         label: 'Reference'
-    },
+    },  
     'code-snippet': {
         color: 'text-indigo-600 dark:text-indigo-400',
         bgColor: 'bg-indigo-500/10',

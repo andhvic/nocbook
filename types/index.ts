@@ -318,3 +318,57 @@ export interface NoteSearchResult {
     created_at: string
     rank: number
 }
+
+// Logs Fiture
+export type LogMood = 'terrible' | 'bad' | 'neutral' | 'good' | 'excellent'
+
+export interface DailyLog {
+    id: string
+    user_id: string
+    log_date: string
+    log_time?: string
+    duration_minutes: number
+    mood?: LogMood
+    energy_level?: number // 1-5
+    title: string
+    description?: string
+    highlights?: string
+    obstacles?: string
+    insights?: string
+    task_id?: string
+    project_id?: string
+    skill_id?: string
+    event_id?: string
+    tags?: string[]
+    attachments?: string[]
+    is_featured: boolean
+    created_at: string
+    updated_at: string
+}
+
+// Log with relations
+export interface DailyLogWithRelations extends DailyLog {
+    task?: Task
+    project?: Project
+    skill?: Skill
+    event?: Event
+}
+
+// Weekly summary
+export interface WeeklySummary {
+    total_logs: number
+    total_duration: number
+    most_frequent_skill?: string
+    most_frequent_project?: string
+    average_mood?: number
+    average_energy?: number
+}
+
+// Monthly stats
+export interface MonthlyStats {
+    total_logs: number
+    total_hours: number
+    productive_days: number
+    top_skill?: string
+    top_project?: string
+}
