@@ -2,26 +2,114 @@
 
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Users, FolderKanban, Award, Calendar, Plus, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase'
 
 export default function DashboardPage() {
-    const { user, loading } = useAuth()
+    const { user, loading: authLoading } = useAuth()
     const router = useRouter()
+    const supabase = createClient()
 
+    const [counts, setCounts] = useState({
+        people: 0,
+        projects: 0,
+        skills: 0,
+        events: 0
+    })
+    const [loading, setLoading] = useState(true)
+    const [recentActivity, setRecentActivity] = useState<{
+        title: string
+        description: string
+        time: string
+        icon: any
+        color: string
+    }[]>([])
+
+    // Auth check
     useEffect(() => {
-        if (!loading && !user) {
+        if (!authLoading && !user) {
             router.push('/login')
         }
-    }, [user, loading, router])
+    }, [user, authLoading, router])
 
-    if (loading) {
+    // Fetch dashboard data
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            if (!user) return
+
+            try {
+                setLoading(true)
+
+                // Fetch counts in parallel
+                const [
+                    { count: peopleCount },
+                    { count: projectCount },
+                    { count: skillCount },
+                    { count: eventCount }
+                ] = await Promise.all([
+                    supabase.from('people').select('*', { count: 'exact', head: true }),
+                    supabase.from('projects').select('*', { count: 'exact', head: true }),
+                    supabase.from('skills').select('*', { count: 'exact', head: true }),
+                    supabase.from('events').select('*', { count: 'exact', head: true })
+                ])
+
+                setCounts({
+                    people: peopleCount || 0,
+                    projects: projectCount || 0,
+                    skills: skillCount || 0,
+                    events: eventCount || 0
+                })
+
+                // Fetch recent activity (combining people and projects creation)
+                // We'll fetch top 3 most recent from each and sort locally
+                const [{ data: recentPeople }, { data: recentProjects }] = await Promise.all([
+                    supabase.from('people').select('name, created_at').order('created_at', { ascending: false }).limit(3),
+                    supabase.from('projects').select('title, created_at').order('created_at', { ascending: false }).limit(3)
+                ])
+
+                const activities = [
+                    ...(recentPeople?.map(p => ({
+                        title: 'New Person Added',
+                        description: `Added ${p.name} to your network`,
+                        date: new Date(p.created_at),
+                        icon: Users,
+                        color: 'text-blue-500 dark:text-blue-400'
+                    })) || []),
+                    ...(recentProjects?.map(p => ({
+                        title: 'New Project Created',
+                        description: `Started working on ${p.title}`,
+                        date: new Date(p.created_at),
+                        icon: FolderKanban,
+                        color: 'text-green-500 dark:text-green-400'
+                    })) || [])
+                ].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5)
+
+                setRecentActivity(activities.map(a => ({
+                    ...a,
+                    time: a.date.toLocaleDateString(), // Simplification for display
+                    // Remove date object for rendering
+                })))
+
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (user && !authLoading) {
+            fetchDashboardData()
+        }
+    }, [user, authLoading])
+
+    if (authLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary-dark mx-auto mb-4"></div>
-                    <p className="text-text-secondary dark:text-text-darkSecondary">Loading...</p>
+                    <p className="text-text-secondary dark:text-text-darkSecondary">Loading dashboard...</p>
                 </div>
             </div>
         )
@@ -33,8 +121,8 @@ export default function DashboardPage() {
         {
             icon: Users,
             label: 'People',
-            value: '0',
-            change: '+0',
+            value: counts.people.toString(),
+            change: 'Total', // Simplified from 'change' logic
             color: 'text-blue-500 dark:text-blue-400',
             bgColor: 'bg-blue-500/10 dark:bg-blue-400/10',
             href: '/people'
@@ -42,8 +130,8 @@ export default function DashboardPage() {
         {
             icon: FolderKanban,
             label: 'Projects',
-            value: '0',
-            change: '+0',
+            value: counts.projects.toString(),
+            change: 'Total',
             color: 'text-green-500 dark:text-green-400',
             bgColor: 'bg-green-500/10 dark:bg-green-400/10',
             href: '/projects'
@@ -51,8 +139,8 @@ export default function DashboardPage() {
         {
             icon: Award,
             label: 'Skills',
-            value: '0',
-            change: '+0',
+            value: counts.skills.toString(),
+            change: 'Total',
             color: 'text-purple-500 dark:text-purple-400',
             bgColor: 'bg-purple-500/10 dark:bg-purple-400/10',
             href: '/skills'
@@ -60,8 +148,8 @@ export default function DashboardPage() {
         {
             icon: Calendar,
             label: 'Events',
-            value: '0',
-            change: '+0',
+            value: counts.events.toString(),
+            change: 'Total',
             color: 'text-orange-500 dark:text-orange-400',
             bgColor: 'bg-orange-500/10 dark:bg-orange-400/10',
             href: '/events'
@@ -103,16 +191,6 @@ export default function DashboardPage() {
         }
     ]
 
-    const recentActivities = [
-        {
-            title: 'Welcome to NocBook!',
-            description: 'Start by adding your first person or project',
-            time: 'Just now',
-            icon: TrendingUp,
-            color: 'text-primary dark:text-primary-dark'
-        }
-    ]
-
     // Get first name from email
     const displayName = user.email?.split('@')[0] || 'User'
 
@@ -131,9 +209,9 @@ export default function DashboardPage() {
                     </div>
                     <div className="hidden sm:block">
                         <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/20 dark:bg-primary-dark/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-2xl md:text-3xl font-bold text-primary dark:text-primary-dark">
-                {displayName.charAt(0).toUpperCase()}
-              </span>
+                            <span className="text-2xl md:text-3xl font-bold text-primary dark:text-primary-dark">
+                                {displayName.charAt(0).toUpperCase()}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -158,12 +236,12 @@ export default function DashboardPage() {
                                         <Icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.color}`} />
                                     </div>
                                     <div className="text-right">
-                    <span className="text-2xl md:text-3xl font-bold text-text dark:text-text-dark block">
-                      {stat.value}
-                    </span>
+                                        <span className="text-2xl md:text-3xl font-bold text-text dark:text-text-dark block">
+                                            {stat.value}
+                                        </span>
                                         <span className="text-xs text-text-secondary dark:text-text-darkSecondary hidden sm:inline">
-                      {stat.change} this week
-                    </span>
+                                            {stat.change}
+                                        </span>
                                     </div>
                                 </div>
                                 <p className="text-text-secondary dark:text-text-darkSecondary font-medium text-sm md:text-base group-hover:text-primary dark:group-hover:text-primary-dark transition-colors">
@@ -209,9 +287,9 @@ export default function DashboardPage() {
             <div>
                 <h2 className="text-lg md:text-xl font-bold text-text dark:text-text-dark mb-4">Recent Activity</h2>
                 <div className="bg-cardBg dark:bg-cardBg-dark border-2 border-border dark:border-border-dark rounded-xl p-4 md:p-6">
-                    {recentActivities.length > 0 ? (
+                    {recentActivity.length > 0 ? (
                         <div className="space-y-4">
-                            {recentActivities.map((activity, index) => {
+                            {recentActivity.map((activity, index) => {
                                 const Icon = activity.icon
                                 return (
                                     <div
@@ -230,8 +308,8 @@ export default function DashboardPage() {
                                             </p>
                                         </div>
                                         <span className="text-xs text-text-secondary dark:text-text-darkSecondary whitespace-nowrap flex-shrink-0">
-                      {activity.time}
-                    </span>
+                                            {activity.time}
+                                        </span>
                                     </div>
                                 )
                             })}
@@ -239,7 +317,7 @@ export default function DashboardPage() {
                     ) : (
                         <div className="text-center py-8">
                             <p className="text-text-secondary dark:text-text-darkSecondary text-sm md:text-base">
-                                No recent activity yet. Start by creating something!
+                                No recent activity found. Start managing your network or projects!
                             </p>
                         </div>
                     )}

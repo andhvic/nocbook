@@ -264,14 +264,11 @@ export function ProjectForm({ project, people }: ProjectFormProps) {
                     step="5"
                     value={progress}
                     onChange={(e) => setProgress(parseInt(e.target.value))}
-                    className="w-full"
+                    className="w-full range-primary"
+                    style={{
+                    background: `linear-gradient(to right, #2563EB 0%, #2563EB ${progress}%, #293545 ${progress}%, #293545 100%)`
+                }}
                 />
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
-                    <div
-                        className="bg-primary dark:bg-primary-dark h-2 rounded-full transition-all"
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
             </div>
 
             {/* Dates - Grid */}

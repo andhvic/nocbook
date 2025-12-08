@@ -179,7 +179,6 @@ export function SkillForm({ skill }: SkillFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name & Icon */}
             <div className="grid grid-cols-1 gap-4">
                 <div>
                     <label className="block text-sm font-medium text-text dark:text-text-dark mb-2">
@@ -336,16 +335,11 @@ export function SkillForm({ skill }: SkillFormProps) {
                     step="5"
                     value={progress}
                     onChange={(e) => setProgress(parseInt(e.target.value))}
-                    className="w-full"
+                    className="w-full range-primary"
+                    style={{
+                        background: `linear-gradient(to right, #2563EB 0%, #2563EB ${progress}%, #293545 ${progress}%, #293545 100%)`
+                    }}
                 />
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mt-2">
-                    <div
-                        className={`h-3 rounded-full transition-all ${
-                            progress === 100 ? 'bg-green-500' : 'bg-primary dark:bg-primary-dark'
-                        }`}
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
             </div>
 
             {/* Practice Hours */}

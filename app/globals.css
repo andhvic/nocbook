@@ -28,5 +28,33 @@
         color: var(--color-text);
         transition: background-color 200ms, color 200ms;
     }
+
 }
 
+@layer components {
+    .range-primary {
+        @apply appearance-none bg-gray-200 dark:bg-gray-700 rounded-full h-2 outline-none;
+    }
+
+    .range-primary::-webkit-slider-thumb {
+        @apply appearance-none w-5 h-5 rounded-full bg-primary dark:bg-primary-dark cursor-pointer;
+        transition: transform 0.2s;
+    }
+
+    .range-primary::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+    }
+
+    .range-primary::-moz-range-thumb {
+        @apply w-5 h-5 rounded-full bg-primary dark:bg-primary-dark cursor-pointer border-0;
+        transition: transform 0.2s;
+    }
+
+    .range-primary::-moz-range-thumb:hover {
+        transform: scale(1.1);
+    }
+
+    .range-primary::-moz-range-track {
+        @apply bg-gray-200 dark:bg-gray-700 rounded-full h-2;
+    }
+}

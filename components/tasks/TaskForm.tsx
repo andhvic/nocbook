@@ -408,14 +408,11 @@ export function TaskForm({ task, existingSubtasks = [], skills = [], projects = 
                     step="5"
                     value={progress}
                     onChange={(e) => setProgress(parseInt(e.target.value))}
-                    className="w-full"
+                    className="w-full range-primary"
+                    style={{
+                        background: `linear-gradient(to right, #2563EB 0%, #2563EB ${progress}%, #293545 ${progress}%, #293545 100%)`
+                    }}
                 />
-                <div className="w-full h-2 bg-background dark:bg-background-dark rounded-full overflow-hidden mt-2">
-                    <div
-                        className="h-full bg-primary dark:bg-primary-dark transition-all duration-300"
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
             </div>
 
             {/* Recurrence Toggle */}

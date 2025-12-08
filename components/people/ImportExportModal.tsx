@@ -315,7 +315,7 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                             onClick={downloadTemplate}
                                             className="text-sm text-blue-500 dark:text-blue-400 hover:underline font-medium"
                                         >
-                                            📥 Download Excel Template (.xlsx)
+                                            Download Excel Template (.xlsx)
                                         </button>
                                     </div>
                                 </div>
@@ -332,10 +332,10 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                         type="file"
                                         accept=".csv,.xlsx,.xls"
                                         className="w-full px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
-                      bg-background dark:bg-background-dark text-text dark:text-text-dark text-sm
-                      file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
-                      file:bg-primary dark:file:bg-primary-dark file:text-white file:text-sm file:font-medium
-                      file:cursor-pointer hover:file:opacity-90 transition-all"
+                                          bg-background dark:bg-background-dark text-text dark:text-text-dark text-sm
+                                          file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+                                          file:bg-primary dark:file:bg-primary-dark file:text-white file:text-sm file:font-medium
+                                          file:cursor-pointer hover:file:opacity-90 transition-all"
                                     />
                                     <p className="text-xs text-text-secondary dark:text-text-darkSecondary mt-2">
                                         Supported formats: Excel (.xlsx, .xls) or CSV
@@ -413,10 +413,10 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                 </label>
                                 <div className="flex gap-3">
                                     <label className="flex-1 flex items-center justify-center gap-2 px-4 py-3 cursor-pointer rounded-lg border-2 transition-colors
-                    ${exportFormat === 'xlsx'
-                      ? 'border-primary dark:border-primary-dark bg-primary/5 dark:bg-primary-dark/5'
-                      : 'border-border dark:border-border-dark hover:border-primary/50 dark:hover:border-primary-dark/50'
-                    }">
+                                    ${exportFormat === 'xlsx'
+                                      ? 'border-primary dark:border-primary-dark bg-primary/5 dark:bg-primary-dark/5'
+                                      : 'border-border dark:border-border-dark hover:border-primary/50 dark:hover:border-primary-dark/50'
+                                    }">
                                         <input
                                             type="radio"
                                             name="format"
@@ -428,10 +428,10 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                         <span className="text-sm font-medium text-text dark:text-text-dark">Excel (.xlsx)</span>
                                     </label>
                                     <label className="flex-1 flex items-center justify-center gap-2 px-4 py-3 cursor-pointer rounded-lg border-2 transition-colors
-                    ${exportFormat === 'csv'
-                      ? 'border-primary dark:border-primary-dark bg-primary/5 dark:bg-primary-dark/5'
-                      : 'border-border dark:border-border-dark hover:border-primary/50 dark:hover:border-primary-dark/50'
-                    }">
+                                        ${exportFormat === 'csv'
+                                          ? 'border-primary dark:border-primary-dark bg-primary/5 dark:bg-primary-dark/5'
+                                          : 'border-border dark:border-border-dark hover:border-primary/50 dark:hover:border-primary-dark/50'
+                                        }">
                                         <input
                                             type="radio"
                                             name="format"
@@ -461,8 +461,8 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                         value={exportFilters.role}
                                         onChange={(e) => setExportFilters(prev => ({ ...prev, role: e.target.value }))}
                                         className="px-3 py-2 text-sm rounded-lg border-2 border-border dark:border-border-dark
-                      bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
-                      focus:outline-none focus:border-primary dark:focus:border-primary-dark placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
+                                          bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
+                                          focus:outline-none focus:border-primary dark:focus:border-primary-dark placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
                                     />
                                     <input
                                         type="text"
@@ -470,8 +470,8 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                         value={exportFilters.tag}
                                         onChange={(e) => setExportFilters(prev => ({ ...prev, tag: e.target.value }))}
                                         className="px-3 py-2 text-sm rounded-lg border-2 border-border dark:border-border-dark
-                      bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
-                      focus:outline-none focus:border-primary dark:focus:border-primary-dark placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
+                                          bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
+                                          focus:outline-none focus:border-primary dark:focus:border-primary-dark placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
                                     />
                                     <input
                                         type="text"
@@ -479,8 +479,8 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                         value={exportFilters.skill}
                                         onChange={(e) => setExportFilters(prev => ({ ...prev, skill: e.target.value }))}
                                         className="px-3 py-2 text-sm rounded-lg border-2 border-border dark:border-border-dark
-                      bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
-                      focus:outline-none focus:border-primary dark:focus:border-primary-dark placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
+                                          bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
+                                          focus:outline-none focus:border-primary dark:focus:border-primary-dark placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
                                     />
                                 </div>
                             </div>
